@@ -90,6 +90,10 @@ resource "aws_lambda_function" "this" {
     }
   }
 
+  lifecycle {
+    ignore_changes = [image_uri]
+  }
+
   tags = var.tags
 
   # Depending on the log group is necessary to allow Terraform to create the log group before AWS can.
