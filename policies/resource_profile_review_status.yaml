@@ -1,0 +1,35 @@
+---
+apiVersion: api.cerbos.dev/v1
+resourcePolicy:
+  version: "default"
+  importDerivedRoles:
+    - common_roles
+  resource: "profile:review_status"
+  rules:
+    - actions: ['request_approval']
+      effect: EFFECT_ALLOW
+      roles:
+        - Admin
+      derivedRoles:
+        - owner
+      condition:
+        match:
+          expr: R.attr.review_status == "REVIEW_REQUESTED"
+
+    - actions: ['approve']
+      effect: EFFECT_ALLOW
+      roles:
+        - Admin
+      derivedRoles:
+        - manager
+      condition:
+        match:
+          expr: R.attr.review_status == "APPROVED"
+
+    - actions: ['approve']
+      effect: EFFECT_ALLOW
+      roles:
+        - Manager
+      condition:
+        match:
+          expr: P.id in R.attr.authorized_approvers
